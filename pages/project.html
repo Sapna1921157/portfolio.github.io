@@ -11,6 +11,13 @@
    
   </head>
   <body>
+    <!-- Scroll progress bar -->
+    <div class="scroll-progress"></div>
+
+    <!-- Custom cursor (required: portfolio.css hides the default cursor) -->
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
+
     <!-- header section design -->
     <header class="header">
       <a href="#" class="logo"
@@ -86,5 +93,60 @@
           </div>
         </div>
     </section>
+    <script>
+      // --- Scroll progress bar ---
+      const progressBar = document.querySelector('.scroll-progress');
+      window.addEventListener('scroll', () => {
+        const max = document.documentElement.scrollHeight - window.innerHeight;
+        progressBar.style.width = ((window.scrollY / max) * 100) + '%';
+      });
+
+      // --- Custom cursor ---
+      const cursorDot     = document.querySelector('.cursor-dot');
+      const cursorOutline = document.querySelector('.cursor-outline');
+      let ox = 0, oy = 0, mx = 0, my = 0;
+
+      window.addEventListener('mousemove', e => {
+        mx = e.clientX; my = e.clientY;
+        cursorDot.style.left = mx + 'px';
+        cursorDot.style.top  = my + 'px';
+      });
+
+      (function animateCursor() {
+        ox += (mx - ox) * 0.15;
+        oy += (my - oy) * 0.15;
+        cursorOutline.style.left = ox + 'px';
+        cursorOutline.style.top  = oy + 'px';
+        requestAnimationFrame(animateCursor);
+      })();
+
+      document.querySelectorAll('a, .project').forEach(el => {
+        el.addEventListener('mouseenter', () => cursorOutline.classList.add('hovered'));
+        el.addEventListener('mouseleave', () => cursorOutline.classList.remove('hovered'));
+      });
+
+      document.addEventListener('mousedown', () => cursorDot.classList.add('clicked'));
+      document.addEventListener('mouseup',   () => cursorDot.classList.remove('clicked'));
+      document.addEventListener('mouseleave', () => {
+        cursorDot.style.opacity = '0'; cursorOutline.style.opacity = '0';
+      });
+      document.addEventListener('mouseenter', () => {
+        cursorDot.style.opacity = '1'; cursorOutline.style.opacity = '0.6';
+      });
+
+      // --- Mobile nav toggle ---
+      const menuIcon = document.querySelector('#menu-icon');
+      const navbar   = document.querySelector('.navbar');
+      menuIcon.onclick = () => {
+        menuIcon.classList.toggle('bx-x');
+        navbar.classList.toggle('active');
+      };
+
+      // --- Sticky header ---
+      const header = document.querySelector('header');
+      window.addEventListener('scroll', () => {
+        header.classList.toggle('sticky', window.scrollY > 100);
+      });
+    </script>
   </body>
 </html>

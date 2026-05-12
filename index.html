@@ -13,6 +13,13 @@
     <title>Portfolio</title>
   </head>
   <body>
+    <!-- Scroll progress bar at the top -->
+    <div class="scroll-progress"></div>
+
+    <!-- Custom cursor elements -->
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
+
     <!-- header section design -->
     <header class="header">
       <a href="#" class="logo"
@@ -39,13 +46,14 @@
     <!-- home section design -->
 
     <section class="home show-animate" id="home">
+      <canvas id="particles-canvas"></canvas>
       <div class="home-content">
         <h1>
           Hi, I'm <span>Sapna Kumari</span>
           <!-- <span class="animate" style="--i:2;"> -->
         </h1>
         <div class="text-animate">
-          <h3>FullStack Developer</h3>
+          <h3><span id="typed-text"></span><span class="cursor-blink">|</span></h3>
 
           <!-- <span class="animate" style="--i:3;"></span> -->
         </div>
@@ -61,6 +69,11 @@
           <!-- <span class="animate" style="--i:5;"></span> -->
         </div>
       </div>
+
+      <div class="home-img">
+        <img src="photo.jpeg" alt="Sapna Kumari" />
+      </div>
+
       <div class="home-sci">
         <a href="https://www.instagram.com/sapnakumarijha_/"
           ><i class="bx bxl-instagram"></i
@@ -73,6 +86,10 @@
         ></a>
         <!-- <span class="animate" style="--i:6;"></span> -->
       </div>
+      <a href="#about" class="scroll-down">
+        <span></span>
+      </a>
+
       <!-- <div class="home-imgHover"></div> -->
       <!-- <span class="animate home-img" style="--i:7;"></span> -->
     </section>
@@ -109,6 +126,27 @@
                   <span class="animate scroll" style="--i:5;"></span>
                  </div> -->
       </div>
+
+      <!-- Animated stat counters -->
+      <div class="about-stats">
+        <div class="stat-box">
+          <h3><span class="counter" data-target="1">0</span>+</h3>
+          <p>Years Experience</p>
+        </div>
+        <div class="stat-box">
+          <h3><span class="counter" data-target="8">0</span>+</h3>
+          <p>Projects Done</p>
+        </div>
+        <div class="stat-box">
+          <h3><span class="counter" data-target="5">0</span>+</h3>
+          <p>Technologies</p>
+        </div>
+        <div class="stat-box">
+          <h3><span class="counter" data-target="10">0</span>+</h3>
+          <p>Happy Clients</p>
+        </div>
+      </div>
+
     </section>
 
     <!-- education section design -->
@@ -323,48 +361,54 @@
 
     <script src="portfolio.js"></script>
 
-    <!--------------------------------------Contact form working ------------------------------------------------------->
-    <script src="https://smtpjs.com/v3/smtp.js"></script>
+    <!-- ==================== Contact Form Script ==================== -->
 
+    <!-- EmailJS library: sends emails directly from client-side JavaScript
+         without exposing any SMTP password or backend server -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
+    <!-- SweetAlert library: shows stylish success/error popup messages -->
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
     <script>
+      // Initialize EmailJS with your Public Key
+      // Public Key: identifies your EmailJS account (safe to keep in frontend code)
+      emailjs.init("VRD-kUNva5iTY1Lkc");
+
+      // send() is called when the user clicks the Submit button
       function send() {
-        var name = document.getElementById("name").value;
-        var email = document.getElementById("email").value;
-        var contact = document.getElementById("number").value;
-        var sub = document.getElementById("subject").value;
-        var mess = document.getElementById("message").value;
 
-        var body =
-          "Name: " +
-          name +
-          "<br/> Email:" +
-          email +
-          "<br/> Contact Number:" +
-          number +
-          "<br/> Message:" +
-          mess;
+        // Read all form field values entered by the user
+        var name    = document.getElementById("name").value;      // Full Name
+        var email   = document.getElementById("email").value;     // Email Address
+        var contact = document.getElementById("number").value;    // Mobile Number
+        var sub     = document.getElementById("subject").value;   // Email Subject
+        var mess    = document.getElementById("message").value;   // Message
 
-        console.log(body);
-        Email.send({
-          // SecureToken : "f7451bf8-766b-402b-afa5-b2f9dc10274a",
-          // password B5EBB41E147657B8889FFB8557912625ACE9
-
-          Host: "smtp.elasticemail.com",
-          Username: "babyjha9988@gmail.com",
-          Password: "B5EBB41E147657B8889FFB8557912625ACE9",
-          To: "sapnak7508@gmail.com",
-          From: "babyjha9988@gmail.com",
-          Subject: "This is the subject",
-          Body: "And this is the body",
-        }).then((message) => {
-          if (message == "OK") {
-            swal("Successfull", "Your Data Successfull Received", "success");
-          } else {
-            swal("Something Wrong", "Your Data is not Received", "error");
+        // Send the email using EmailJS
+        // Arguments:
+        //   1. Service ID  → your connected Gmail service
+        //   2. Template ID → your EmailJS email template
+        //   3. Parameters  → values mapped to template variables {{from_name}}, {{from_email}}, etc.
+        emailjs.send(
+          "service_2to119q",    // Service ID  (EmailJS → Email Services)
+          "template_dzzrijq",   // Template ID (EmailJS → Email Templates)
+          {
+            from_name:  name,     // maps to {{from_name}}  in the template
+            from_email: email,    // maps to {{from_email}} in the template
+            contact:    contact,  // maps to {{contact}}    in the template
+            subject:    sub,      // maps to {{subject}}    in the template
+            message:    mess,     // maps to {{message}}    in the template
           }
-        });
+        ).then(
+          // On success: show a green success popup
+          () => swal("Successful!", "Your message has been sent.", "success"),
+          // On failure: show a red error popup
+          () => swal("Failed!", "Something went wrong. Please try again.", "error")
+        );
       }
     </script>
+
+    <!-- ============================================================ -->
   </body>
 </html>
