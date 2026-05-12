@@ -47,51 +47,64 @@
 
     <section class="home show-animate" id="home">
       <canvas id="particles-canvas"></canvas>
-      <div class="home-content">
-        <h1>
-          Hi, I'm <span>Sapna Kumari</span>
-          <!-- <span class="animate" style="--i:2;"> -->
-        </h1>
-        <div class="text-animate">
-          <h3><span id="typed-text"></span><span class="cursor-blink">|</span></h3>
 
-          <!-- <span class="animate" style="--i:3;"></span> -->
+      <div class="home-content">
+        <!-- Availability badge -->
+        <div class="status-badge">
+          <span class="status-dot"></span> Available for Work
         </div>
-        <p>
+
+        <h1 class="home-reveal">
+          Hi, I’m <span class="glitch-name" data-text="Sapna Kumari">Sapna Kumari</span>
+        </h1>
+
+        <div class="text-animate home-reveal" style="--reveal-delay:0.2s">
+          <h3><span id="typed-text"></span><span class="cursor-blink">|</span></h3>
+        </div>
+
+        <p class="home-reveal" style="--reveal-delay:0.4s">
           I’m a Full-Stack Developer skilled in building dynamic web applications using the MEAN stack,
-           HTML, CSS, JavaScript, and MySQL for robust data management.
-          <!-- <span class="animate" style="--i:4;"></span> -->
+          HTML, CSS, JavaScript, and MySQL for robust data management.
         </p>
 
-        <div class="btn-box">
-          <a href="RESUME (1).pdf" class="btn" download="Resume">Resume</a>
-          <a href="#contact" class="btn">Let's Talk</a>
-          <!-- <span class="animate" style="--i:5;"></span> -->
+        <div class="btn-box home-reveal" style="--reveal-delay:0.6s">
+          <a href="RESUME (1).pdf" class="btn" download="Resume">
+            <i class="bx bx-download"></i> Resume
+          </a>
+          <a href="#contact" class="btn">
+            <i class="bx bx-chat"></i> Let’s Talk
+          </a>
+        </div>
+
+        <!-- Inline stats strip -->
+        <div class="home-stats home-reveal" style="--reveal-delay:0.8s">
+          <div class="hstat"><span>1+</span><p>Yrs Exp</p></div>
+          <div class="hstat-divider"></div>
+          <div class="hstat"><span>4+</span><p>Projects</p></div>
+          <div class="hstat-divider"></div>
+          <div class="hstat"><span>5+</span><p>Technologies</p></div>
         </div>
       </div>
 
+      <!-- Profile image -->
       <div class="home-img">
         <img src="photo.jpeg" alt="Sapna Kumari" />
       </div>
 
+      <!-- Social icons with tooltips -->
       <div class="home-sci">
-        <a href="https://www.instagram.com/sapnakumarijha_/"
-          ><i class="bx bxl-instagram"></i
-        ></a>
-        <a href="https://github.com/Sapna1921157"
-          ><i class="bx bxl-github"></i
-        ></a>
-        <a href="https://www.linkedin.com/in/sapna-kumari-471549217/"
-          ><i class="bx bxl-linkedin"></i
-        ></a>
-        <!-- <span class="animate" style="--i:6;"></span> -->
+        <a href="https://www.instagram.com/sapnakumarijha_/" data-tip="Instagram">
+          <i class="bx bxl-instagram"></i>
+        </a>
+        <a href="https://github.com/Sapna1921157" data-tip="GitHub">
+          <i class="bx bxl-github"></i>
+        </a>
+        <a href="https://www.linkedin.com/in/sapna-kumari-471549217/" data-tip="LinkedIn">
+          <i class="bx bxl-linkedin"></i>
+        </a>
       </div>
-      <a href="#about" class="scroll-down">
-        <span></span>
-      </a>
 
-      <!-- <div class="home-imgHover"></div> -->
-      <!-- <span class="animate home-img" style="--i:7;"></span> -->
+      <a href="#about" class="scroll-down"><span></span></a>
     </section>
 
     <!-- about section design -->
@@ -190,16 +203,12 @@
           <p>Years Experience</p>
         </div>
         <div class="stat-box">
-          <h3><span class="counter" data-target="8">0</span>+</h3>
+          <h3><span class="counter" data-target="4">0</span>+</h3>
           <p>Projects Done</p>
         </div>
         <div class="stat-box">
           <h3><span class="counter" data-target="5">0</span>+</h3>
           <p>Technologies</p>
-        </div>
-        <div class="stat-box">
-          <h3><span class="counter" data-target="10">0</span>+</h3>
-          <p>Happy Clients</p>
         </div>
       </div>
 

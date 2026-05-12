@@ -37,6 +37,15 @@ typeText();
 const canvas = document.getElementById('particles-canvas');
 const ctx = canvas.getContext('2d');
 
+// Track mouse position relative to canvas for particle repulsion
+let pMouseX = -9999, pMouseY = -9999;
+window.addEventListener('mousemove', e => {
+  const rect = canvas.getBoundingClientRect();
+  pMouseX = e.clientX - rect.left;
+  pMouseY = e.clientY - rect.top;
+});
+window.addEventListener('mouseleave', () => { pMouseX = -9999; pMouseY = -9999; });
+
 function resizeCanvas() {
   canvas.width  = canvas.offsetWidth;
   canvas.height = canvas.offsetHeight;
@@ -55,20 +64,39 @@ class Particle {
     this.a  = Math.random() * 0.4 + 0.15;
   }
   update() {
+    // Gentle repulsion from mouse cursor
+    const dx = this.x - pMouseX;
+    const dy = this.y - pMouseY;
+    const dist = Math.hypot(dx, dy);
+    if (dist < 100 && dist > 0) {
+      const force = (100 - dist) / 100 * 0.6;
+      this.vx += (dx / dist) * force;
+      this.vy += (dy / dist) * force;
+    }
+    // Speed damping to prevent runaway velocity
+    this.vx *= 0.98;
+    this.vy *= 0.98;
+    // Clamp max speed
+    const speed = Math.hypot(this.vx, this.vy);
+    if (speed > 2) { this.vx = (this.vx / speed) * 2; this.vy = (this.vy / speed) * 2; }
+
     this.x += this.vx;
     this.y += this.vy;
     if (this.x < 0 || this.x > canvas.width)  this.vx *= -1;
     if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
   }
   draw() {
+    // Particles near mouse glow brighter
+    const dist = Math.hypot(this.x - pMouseX, this.y - pMouseY);
+    const glow = dist < 120 ? this.a + (1 - dist / 120) * 0.5 : this.a;
     ctx.beginPath();
     ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
-    ctx.fillStyle = `rgba(126,149,218,${this.a})`;
+    ctx.fillStyle = `rgba(126,149,218,${Math.min(glow, 0.9)})`;
     ctx.fill();
   }
 }
 
-const particles = Array.from({ length: 75 }, () => new Particle());
+const particles = Array.from({ length: 85 }, () => new Particle());
 
 function drawLines() {
   for (let i = 0; i < particles.length; i++) {
@@ -134,7 +162,7 @@ window.addEventListener('mousemove', e => {
 })();
 
 // Enlarge the outline when hovering over interactive elements
-document.querySelectorAll('a, button, .btn, .skill-box, .stat-box, #menu-icon').forEach(el => {
+document.querySelectorAll('a, button, .btn, .skill-box, .stat-box, #menu-icon, .htag').forEach(el => {
   el.addEventListener('mouseenter', () => cursorOutline.classList.add('hovered'));
   el.addEventListener('mouseleave', () => cursorOutline.classList.remove('hovered'));
 });
