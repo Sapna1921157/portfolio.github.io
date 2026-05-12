@@ -210,7 +210,6 @@ document.querySelectorAll('.btn').forEach(btn => {
 // Adds green (valid) or red (invalid) border feedback as the user types
 
 function validateEmail(val) {
-  // Basic email format check
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val);
 }
 
@@ -219,36 +218,166 @@ function validatePhone(val) {
   return /^[0-9]{10}$/.test(val);
 }
 
-function liveValidate(inputEl, isValidFn) {
-  inputEl.addEventListener('input', function() {
+function liveValidate(id, isValidFn) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.addEventListener('input', function() {
     const ok = isValidFn(this.value);
-    // Only show invalid state if user has typed something
     this.classList.toggle('valid',   ok);
     this.classList.toggle('invalid', this.value.length > 0 && !ok);
   });
 }
 
-liveValidate(document.getElementById('name'),    v => v.trim().length >= 2);
-liveValidate(document.getElementById('email'),   validateEmail);
-liveValidate(document.getElementById('number'),  validatePhone);
-liveValidate(document.getElementById('subject'), v => v.trim().length >= 2);
+liveValidate('name',    v => v.trim().length >= 2);
+liveValidate('email',   validateEmail);
+liveValidate('number',  validatePhone);
+liveValidate('subject', v => v.trim().length >= 2);
 
 // --- Textarea character counter ---
-// Shows live "x / 500" count below the message box; turns red near limit
+// Injected below the message textarea; turns red when nearing 500 chars
 const textarea = document.getElementById('message');
-const charCounter = document.createElement('div');
-charCounter.classList.add('char-counter');
-charCounter.textContent = '0 / 500';
-textarea.parentElement.appendChild(charCounter);
+if (textarea) {
+  const charCounter = document.createElement('div');
+  charCounter.classList.add('char-counter');
+  charCounter.textContent = '0 / 500';
+  // Insert after the .textarea-group div (sibling, full width)
+  textarea.closest('.textarea-group').insertAdjacentElement('afterend', charCounter);
 
-textarea.addEventListener('input', function() {
-  const len = this.value.length;
-  charCounter.textContent = len + ' / 500';
-  charCounter.classList.toggle('limit', len > 450); // red when close to limit
+  textarea.addEventListener('input', function() {
+    const len = this.value.length;
+    charCounter.textContent = len + ' / 500';
+    charCounter.classList.toggle('limit', len > 450);
+    this.classList.toggle('valid',   len >= 10);
+    this.classList.toggle('invalid', len > 0 && len < 10);
+  });
+}
 
-  this.classList.toggle('valid',   len >= 10);
-  this.classList.toggle('invalid', len > 0 && len < 10);
+/* ================================================================
+   ABOUT — Image 3D tilt on mouse move
+================================================================ */
+const aboutImg = document.querySelector('.about-img');
+if (aboutImg) {
+  aboutImg.addEventListener('mousemove', e => {
+    const rect   = aboutImg.getBoundingClientRect();
+    const cx     = rect.left + rect.width  / 2;
+    const cy     = rect.top  + rect.height / 2;
+    const rotateX =  ((e.clientY - cy) / (rect.height / 2)) * 12; // max ±12°
+    const rotateY = -((e.clientX - cx) / (rect.width  / 2)) * 12;
+    aboutImg.querySelector('img').style.transform =
+      `perspective(600px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.04)`;
+  });
+  aboutImg.addEventListener('mouseleave', () => {
+    aboutImg.querySelector('img').style.transform = 'perspective(600px) rotateX(0) rotateY(0) scale(1)';
+  });
+}
+
+/* ================================================================
+   ABOUT — Tab switching (About Me / What I Do / Fun Facts)
+================================================================ */
+
+document.querySelectorAll('.about-tab').forEach(tab => {
+  tab.addEventListener('click', function() {
+    // Deactivate all tabs and panels
+    document.querySelectorAll('.about-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.about-panel').forEach(p => p.classList.remove('active'));
+    // Activate clicked tab and matching panel
+    this.classList.add('active');
+    document.getElementById('tab-' + this.dataset.tab).classList.add('active');
+  });
 });
+
+/* ================================================================
+   EDUCATION — Journey tab filter + timeline card expand/collapse
+================================================================ */
+
+// Journey tab filter: show/hide tl-items by type
+document.querySelectorAll('.journey-tab').forEach(tab => {
+  tab.addEventListener('click', function () {
+    document.querySelectorAll('.journey-tab').forEach(t => t.classList.remove('active'));
+    this.classList.add('active');
+
+    const filter = this.dataset.filter;
+    document.querySelectorAll('.tl-item').forEach(item => {
+      item.classList.toggle('tl-hidden', filter !== 'all' && item.dataset.type !== filter);
+    });
+  });
+});
+
+// Timeline card expand/collapse on click
+// Only one card can be open at a time; clicking the open card closes it
+document.querySelectorAll('.tl-card').forEach(card => {
+  card.addEventListener('click', () => {
+    const isOpen = card.classList.contains('open');
+    document.querySelectorAll('.tl-card.open').forEach(c => c.classList.remove('open'));
+    if (!isOpen) card.classList.add('open');
+  });
+});
+
+/* ================================================================
+   SKILLS — Tab filter + animated progress bars
+================================================================ */
+
+// Tab filter: show/hide skill cards by category
+document.querySelectorAll('.skill-tab').forEach(tab => {
+  tab.addEventListener('click', function() {
+    // Update active tab
+    document.querySelectorAll('.skill-tab').forEach(t => t.classList.remove('active'));
+    this.classList.add('active');
+
+    const filter = this.dataset.filter;
+
+    document.querySelectorAll('.skill-card').forEach(card => {
+      const match = filter === 'all' || card.dataset.category === filter;
+      if (match) {
+        card.classList.remove('hidden');
+        // Re-trigger progress bar fill after filter change
+        const fill = card.querySelector('.skill-fill');
+        fill.style.width = '0%';
+        setTimeout(() => { fill.style.width = fill.dataset.level + '%'; }, 80);
+      } else {
+        card.classList.add('hidden');
+      }
+    });
+  });
+});
+
+// Animate progress bars when skills section enters the viewport
+function fillBars() {
+  document.querySelectorAll('.skill-fill').forEach(fill => {
+    if (!fill.dataset.animated) {
+      fill.dataset.animated = 'true';
+      fill.style.width = fill.dataset.level + '%';
+    }
+  });
+}
+
+// Trigger bars when show-animate is added to .skills
+const skillsSection = document.querySelector('.skills');
+if (skillsSection) {
+  new MutationObserver(mutations => {
+    mutations.forEach(m => {
+      if (m.target.classList.contains('show-animate')) fillBars();
+    });
+  }).observe(skillsSection, { attributes: true, attributeFilter: ['class'] });
+}
+
+// --- IntersectionObserver: reliably trigger show-animate for every section ---
+// window.onscroll alone misses sections when navigating via nav links (page jumps).
+// IntersectionObserver fires whenever a section enters or leaves the viewport,
+// regardless of how the user got there.
+const sectionObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('show-animate');
+    } else {
+      entry.target.classList.remove('show-animate');
+    }
+  });
+}, {
+  threshold: 0.08   // trigger as soon as ~8% of the section is visible
+});
+
+document.querySelectorAll('section').forEach(sec => sectionObserver.observe(sec));
 
 /* =================================================== */
 

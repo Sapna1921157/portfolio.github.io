@@ -4,104 +4,384 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="../portfolio.css" />
-    <!-- box icons -->
-    <link  href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"  rel="stylesheet"/>
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet"/>
+    <title>Projects — Sapna</title>
+    <style>
+      /* ============================================================
+         PAGE-LEVEL OVERRIDES  (scoped so they don't leak to index)
+      ============================================================ */
 
-    <title>Projects</title>
-   
+      /* ── Page hero ── */
+      .projects-hero {
+        padding: 12rem 9% 4rem;
+        text-align: center;
+      }
+      .projects-hero h1 {
+        font-size: 5rem;
+        font-weight: 700;
+        color: var(--text-color);
+      }
+      .projects-hero h1 span { color: var(--main-color); }
+      .projects-hero p {
+        font-size: 1.7rem;
+        color: var(--text-color);
+        opacity: 0.7;
+        margin-top: 1rem;
+      }
+
+      /* ── Filter tabs ── */
+      .filter-tabs {
+        display: flex;
+        justify-content: center;
+        gap: 1.2rem;
+        flex-wrap: wrap;
+        margin: 2rem 0 4rem;
+        padding: 0 9%;
+      }
+      .filter-tab {
+        padding: 0.7rem 2.2rem;
+        border: 2px solid var(--main-color);
+        border-radius: 50px;
+        background: transparent;
+        color: var(--main-color);
+        font-size: 1.4rem;
+        cursor: pointer;
+        transition: background 0.25s, color 0.25s, box-shadow 0.25s, transform 0.2s;
+      }
+      .filter-tab:hover,
+      .filter-tab.active {
+        background: var(--main-color);
+        color: var(--bg-color);
+        box-shadow: 0 0 14px rgba(0,238,255,0.4);
+        transform: translateY(-2px);
+      }
+
+      /* ── Cards grid ── */
+      .projects-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(32rem, 1fr));
+        gap: 3rem;
+        padding: 0 9% 8rem;
+      }
+
+      /* ── Single card ── */
+      .proj-card {
+        background: var(--second-bg-color);
+        border: 1px solid rgba(0,238,255,0.15);
+        border-radius: 1.6rem;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        transition: transform 0.35s, box-shadow 0.35s, border-color 0.35s;
+        /* entrance animation */
+        opacity: 0;
+        transform: translateY(40px);
+        animation: cardIn 0.55s ease forwards;
+      }
+      .proj-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 16px 48px rgba(0,238,255,0.18);
+        border-color: var(--main-color);
+      }
+      /* stagger each card's entrance */
+      .proj-card:nth-child(1) { animation-delay: 0.05s; }
+      .proj-card:nth-child(2) { animation-delay: 0.15s; }
+      .proj-card:nth-child(3) { animation-delay: 0.25s; }
+      .proj-card:nth-child(4) { animation-delay: 0.35s; }
+      .proj-card:nth-child(5) { animation-delay: 0.45s; }
+      .proj-card:nth-child(6) { animation-delay: 0.55s; }
+
+      @keyframes cardIn {
+        to { opacity: 1; transform: translateY(0); }
+      }
+
+      /* hide filtered-out cards */
+      .proj-card.hidden {
+        display: none;
+      }
+
+      /* ── Card image with hover overlay ── */
+      .proj-img {
+        position: relative;
+        overflow: hidden;
+        height: 22rem;
+        background: #000;
+      }
+      .proj-img img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.45s ease, opacity 0.45s ease;
+      }
+      .proj-card:hover .proj-img img {
+        transform: scale(1.08);
+        opacity: 0.35;
+      }
+      .proj-overlay {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 1.2rem;
+        opacity: 0;
+        transition: opacity 0.35s ease;
+      }
+      .proj-card:hover .proj-overlay { opacity: 1; }
+
+      .proj-overlay a {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.6rem;
+        padding: 0.8rem 2rem;
+        border-radius: 50px;
+        font-size: 1.4rem;
+        font-weight: 600;
+        text-decoration: none;
+        transition: transform 0.2s, box-shadow 0.2s;
+      }
+      .proj-overlay a:hover { transform: scale(1.06); }
+      .overlay-demo {
+        background: var(--main-color);
+        color: var(--bg-color);
+        box-shadow: 0 0 16px rgba(0,238,255,0.5);
+      }
+      .overlay-gh {
+        background: transparent;
+        color: var(--main-color);
+        border: 2px solid var(--main-color);
+      }
+
+      /* ── Card body ── */
+      .proj-body {
+        padding: 2rem 2.2rem 2.2rem;
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+      }
+      .proj-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.6rem;
+        margin-bottom: 1rem;
+      }
+      .proj-tag {
+        font-size: 1.15rem;
+        padding: 0.25rem 1rem;
+        border-radius: 50px;
+        background: rgba(0,238,255,0.1);
+        color: var(--main-color);
+        border: 1px solid rgba(0,238,255,0.3);
+      }
+      .proj-title {
+        font-size: 2rem;
+        font-weight: 600;
+        color: var(--text-color);
+        margin-bottom: 0.8rem;
+      }
+      .proj-desc {
+        font-size: 1.45rem;
+        color: var(--text-color);
+        opacity: 0.75;
+        line-height: 1.7;
+        flex: 1;
+      }
+      .proj-links {
+        display: flex;
+        gap: 1.2rem;
+        margin-top: 1.8rem;
+      }
+      .proj-links a {
+        flex: 1;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        padding: 0.9rem 1rem;
+        border-radius: 0.8rem;
+        font-size: 1.4rem;
+        font-weight: 600;
+        text-decoration: none;
+        transition: transform 0.2s, box-shadow 0.2s;
+      }
+      .link-demo {
+        background: var(--main-color);
+        color: var(--bg-color);
+      }
+      .link-demo:hover {
+        box-shadow: 0 4px 18px rgba(0,238,255,0.45);
+        transform: translateY(-2px);
+      }
+      .link-gh {
+        background: transparent;
+        color: var(--main-color);
+        border: 2px solid var(--main-color);
+      }
+      .link-gh:hover {
+        background: var(--main-color);
+        color: var(--bg-color);
+        transform: translateY(-2px);
+      }
+
+      /* ── Empty-state message when all filtered out ── */
+      .no-results {
+        display: none;
+        grid-column: 1 / -1;
+        text-align: center;
+        padding: 4rem;
+        font-size: 1.7rem;
+        color: var(--main-color);
+        opacity: 0.6;
+      }
+
+      /* ── Responsive ── */
+      @media (max-width: 768px) {
+        .projects-hero h1 { font-size: 3.6rem; }
+        .projects-grid { grid-template-columns: 1fr; padding: 0 5% 6rem; }
+        .filter-tabs { padding: 0 5%; }
+      }
+    </style>
   </head>
   <body>
     <!-- Scroll progress bar -->
     <div class="scroll-progress"></div>
 
-    <!-- Custom cursor (required: portfolio.css hides the default cursor) -->
+    <!-- Custom cursor -->
     <div class="cursor-dot"></div>
     <div class="cursor-outline"></div>
 
-    <!-- header section design -->
+    <!-- ── Header ── -->
     <header class="header">
-      <a href="#" class="logo"
-        >Sapna.
-        <!-- <span class="animate" style="--i:1;"></span> -->
-      </a>
-
-      <div class="bx bx-menu" id="menu-icon">
-        <!-- <span class="animate" style="--i:2;"></span> -->
-      </div>
+      <a href="#" class="logo">Sapna.</a>
+      <div class="bx bx-menu" id="menu-icon"></div>
       <nav class="navbar">
         <a href="../index.html">Home</a>
-        <a href="../index.html">About</a>
-        <a href="../index.html">Education</a>
-        <a href="../index.html">Skills</a>
+        <a href="../index.html#about">About</a>
+        <a href="../index.html#education">Education</a>
+        <a href="../index.html#skills">Skills</a>
         <a href="#" class="active">Projects</a>
-        <a href="../index.html">Contact</a>
-
+        <a href="../index.html#contact">Contact</a>
         <span class="active-nav"></span>
-        <!-- <span class="animate" style="--i:2;"></span> -->
       </nav>
     </header>
 
-     <!------------------------ project section  ---------------------------->
-    <section class="projects">
-      <div class="project">
-        <div class="project-detail">
-          <h1 class="project-title">The Analog Clock</h1>
-          
-              <strong> Project Overview:</strong>
-              Create a web-based analog clock project using HTML, CSS, and JavaScript. Design the clock
-               face with rotating hour, minute, and second hands that reflect real-time. Ensure responsiveness, interactivity,
-               and accessibility for a polished and user-friendly experience, and host it online for easy sharing.
-          
-        </div>
+    <!-- ── Page hero ── -->
+    <div class="projects-hero">
+      <h1>My <span>Projects</span></h1>
+      <p>A showcase of things I've built — from interactive UIs to full-stack apps.</p>
+    </div>
 
-        <div class="project-link">
-          <a href="https://sapna1921157.github.io/Clock.github.io/"> <img src="../clock.png" alt="" class="analog-clock" ></a>
-         
-        </div>
-      </div>
-      <!-- --second project -- -->
-      <div class="project">
-        <div class="project-link">
-          <a href="https://sapna1921157.github.io/Piano.github.io/"> <img src="../piano1.png" alt="" class="Piano">
-          </a>
-          
-        </div>
-        <div class="project-detail">
-          <h1 class="project-title">Purple Piano</h1>
-              <strong> Project Overview:</strong>
-              Develop an interactive piano project with HTML, CSS, and JavaScript.
-               Design a visually appealing keyboard interface, allowing users to play piano sounds by clicking
-                keys or using keyboard input. 
-              Implement sound mapping, responsive design, and user-friendly features, and host it for online access and sharing.
-        </div>
-      </div>
-        <!------------------- third project -------------- -->
-        <div class="project">
-          <div class="project-detail">
-            <h1 class="project-title">Calculator</h1>
-           
-                <strong> Project Overview:</strong>
-                Build a web-based calculator project using HTML, CSS, and JavaScript. Create an intuitive user interface with buttons for numbers and operators, enabling users to perform basic arithmetic operations. Implement logic for accurate calculations, responsive design for various devices, 
-                and clear display of results for a practical and accessible calculator experience.
-              
-          </div>
-          
-          <div class="project-link">
-            <a href="https://sapna1921157.github.io/Calculator.github.io/"><img src="../calculator1.png" alt="" class="calculator">
+    <!-- ── Filter tabs ── -->
+    <div class="filter-tabs">
+      <button class="filter-tab active" data-filter="all">All</button>
+      <button class="filter-tab" data-filter="javascript">JavaScript</button>
+      <button class="filter-tab" data-filter="html-css">HTML &amp; CSS</button>
+    </div>
+
+    <!-- ── Projects grid ── -->
+    <div class="projects-grid">
+
+      <!-- Card 1: Analog Clock -->
+      <div class="proj-card" data-category="javascript html-css">
+        <div class="proj-img">
+          <img src="../clock.png" alt="Analog Clock" />
+          <div class="proj-overlay">
+            <a href="https://sapna1921157.github.io/Clock.github.io/" target="_blank" class="overlay-demo">
+              <i class="bx bx-link-external"></i> Live Demo
             </a>
-
           </div>
         </div>
-    </section>
+        <div class="proj-body">
+          <div class="proj-tags">
+            <span class="proj-tag">HTML</span>
+            <span class="proj-tag">CSS</span>
+            <span class="proj-tag">JavaScript</span>
+          </div>
+          <h2 class="proj-title">The Analog Clock</h2>
+          <p class="proj-desc">A real-time analog clock with rotating hour, minute, and second hands. Responsive and accessible, with a clean visual design hosted for easy sharing.</p>
+          <div class="proj-links">
+            <a href="https://sapna1921157.github.io/Clock.github.io/" target="_blank" class="link-demo">
+              <i class="bx bx-play"></i> Live Demo
+            </a>
+            <a href="https://github.com/sapna1921157/Clock.github.io" target="_blank" class="link-gh">
+              <i class="bx bxl-github"></i> GitHub
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 2: Purple Piano -->
+      <div class="proj-card" data-category="javascript html-css">
+        <div class="proj-img">
+          <img src="../piano1.png" alt="Purple Piano" />
+          <div class="proj-overlay">
+            <a href="https://sapna1921157.github.io/Piano.github.io/" target="_blank" class="overlay-demo">
+              <i class="bx bx-link-external"></i> Live Demo
+            </a>
+          </div>
+        </div>
+        <div class="proj-body">
+          <div class="proj-tags">
+            <span class="proj-tag">HTML</span>
+            <span class="proj-tag">CSS</span>
+            <span class="proj-tag">JavaScript</span>
+          </div>
+          <h2 class="proj-title">Purple Piano</h2>
+          <p class="proj-desc">An interactive piano keyboard that plays sounds via mouse clicks or keyboard input. Features sound mapping, responsive design, and a vibrant purple aesthetic.</p>
+          <div class="proj-links">
+            <a href="https://sapna1921157.github.io/Piano.github.io/" target="_blank" class="link-demo">
+              <i class="bx bx-play"></i> Live Demo
+            </a>
+            <a href="https://github.com/sapna1921157/Piano.github.io" target="_blank" class="link-gh">
+              <i class="bx bxl-github"></i> GitHub
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 3: Calculator -->
+      <div class="proj-card" data-category="javascript html-css">
+        <div class="proj-img">
+          <img src="../calculator1.png" alt="Calculator" />
+          <div class="proj-overlay">
+            <a href="https://sapna1921157.github.io/Calculator.github.io/" target="_blank" class="overlay-demo">
+              <i class="bx bx-link-external"></i> Live Demo
+            </a>
+          </div>
+        </div>
+        <div class="proj-body">
+          <div class="proj-tags">
+            <span class="proj-tag">HTML</span>
+            <span class="proj-tag">CSS</span>
+            <span class="proj-tag">JavaScript</span>
+          </div>
+          <h2 class="proj-title">Calculator</h2>
+          <p class="proj-desc">A web-based calculator with an intuitive UI for basic arithmetic. Implements accurate calculation logic with responsive design and a clean result display.</p>
+          <div class="proj-links">
+            <a href="https://sapna1921157.github.io/Calculator.github.io/" target="_blank" class="link-demo">
+              <i class="bx bx-play"></i> Live Demo
+            </a>
+            <a href="https://github.com/sapna1921157/Calculator.github.io" target="_blank" class="link-gh">
+              <i class="bx bxl-github"></i> GitHub
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Empty-state row (shown when filter yields nothing) -->
+      <p class="no-results">No projects match this filter yet — check back soon!</p>
+    </div>
+
     <script>
-      // --- Scroll progress bar ---
+      /* ── Scroll progress bar ── */
       const progressBar = document.querySelector('.scroll-progress');
       window.addEventListener('scroll', () => {
         const max = document.documentElement.scrollHeight - window.innerHeight;
         progressBar.style.width = ((window.scrollY / max) * 100) + '%';
       });
 
-      // --- Custom cursor ---
+      /* ── Custom cursor ── */
       const cursorDot     = document.querySelector('.cursor-dot');
       const cursorOutline = document.querySelector('.cursor-outline');
       let ox = 0, oy = 0, mx = 0, my = 0;
@@ -111,7 +391,6 @@
         cursorDot.style.left = mx + 'px';
         cursorDot.style.top  = my + 'px';
       });
-
       (function animateCursor() {
         ox += (mx - ox) * 0.15;
         oy += (my - oy) * 0.15;
@@ -119,12 +398,10 @@
         cursorOutline.style.top  = oy + 'px';
         requestAnimationFrame(animateCursor);
       })();
-
-      document.querySelectorAll('a, .project').forEach(el => {
+      document.querySelectorAll('a, button, .proj-card').forEach(el => {
         el.addEventListener('mouseenter', () => cursorOutline.classList.add('hovered'));
         el.addEventListener('mouseleave', () => cursorOutline.classList.remove('hovered'));
       });
-
       document.addEventListener('mousedown', () => cursorDot.classList.add('clicked'));
       document.addEventListener('mouseup',   () => cursorDot.classList.remove('clicked'));
       document.addEventListener('mouseleave', () => {
@@ -134,7 +411,7 @@
         cursorDot.style.opacity = '1'; cursorOutline.style.opacity = '0.6';
       });
 
-      // --- Mobile nav toggle ---
+      /* ── Mobile nav toggle ── */
       const menuIcon = document.querySelector('#menu-icon');
       const navbar   = document.querySelector('.navbar');
       menuIcon.onclick = () => {
@@ -142,10 +419,55 @@
         navbar.classList.toggle('active');
       };
 
-      // --- Sticky header ---
+      /* ── Sticky header ── */
       const header = document.querySelector('header');
       window.addEventListener('scroll', () => {
         header.classList.toggle('sticky', window.scrollY > 100);
+      });
+
+      /* ── Filter tabs ── */
+      document.querySelectorAll('.filter-tab').forEach(tab => {
+        tab.addEventListener('click', function() {
+          // Update active tab
+          document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+          this.classList.add('active');
+
+          const filter = this.dataset.filter;
+          let visible = 0;
+
+          document.querySelectorAll('.proj-card').forEach(card => {
+            const cats = card.dataset.category || '';
+            // 'all' matches everything; otherwise check if the card's categories include the filter
+            const match = filter === 'all' || cats.split(' ').includes(filter);
+            card.classList.toggle('hidden', !match);
+            if (match) {
+              visible++;
+              // Re-trigger entrance animation on filter change
+              card.style.animation = 'none';
+              card.offsetHeight;   // reflow
+              card.style.animation = '';
+            }
+          });
+
+          // Show/hide empty-state message
+          document.querySelector('.no-results').style.display = visible === 0 ? 'block' : 'none';
+        });
+      });
+
+      /* ── Intersection observer: animate cards as they scroll into view ── */
+      const cardObserver = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.style.animationPlayState = 'running';
+            cardObserver.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.1 });
+
+      // Pause initial animation until card enters viewport
+      document.querySelectorAll('.proj-card').forEach(card => {
+        card.style.animationPlayState = 'paused';
+        cardObserver.observe(card);
       });
     </script>
   </body>
