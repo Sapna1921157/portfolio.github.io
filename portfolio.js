@@ -1,3 +1,40 @@
+/* ======= THEME SYSTEM ======= */
+
+let particleColor = '126,149,218'; // updated when theme changes
+
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  localStorage.setItem('theme', theme);
+  const btn = document.getElementById('theme-toggle');
+  if (!btn) return;
+  const icon = btn.querySelector('i');
+  if (theme === 'light') {
+    particleColor = '67,97,194';
+    icon.classList.replace('bx-moon', 'bx-sun');
+  } else {
+    particleColor = '126,149,218';
+    icon.classList.replace('bx-sun', 'bx-moon');
+  }
+}
+
+// Apply saved theme on load (before paint to avoid flash)
+applyTheme(localStorage.getItem('theme') || 'dark');
+
+document.addEventListener('DOMContentLoaded', () => {
+  const themeBtn = document.getElementById('theme-toggle');
+  if (themeBtn) {
+    // Sync icon with the already-applied theme
+    const current = document.documentElement.getAttribute('data-theme');
+    const icon = themeBtn.querySelector('i');
+    if (current === 'light') icon.classList.replace('bx-moon', 'bx-sun');
+
+    themeBtn.addEventListener('click', () => {
+      const active = document.documentElement.getAttribute('data-theme');
+      applyTheme(active === 'light' ? 'dark' : 'light');
+    });
+  }
+});
+
 /* ======= INTERACTIVE HOME ENHANCEMENTS ======= */
 
 // --- Typewriter effect ---
@@ -91,7 +128,7 @@ class Particle {
     const glow = dist < 120 ? this.a + (1 - dist / 120) * 0.5 : this.a;
     ctx.beginPath();
     ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
-    ctx.fillStyle = `rgba(126,149,218,${Math.min(glow, 0.9)})`;
+    ctx.fillStyle = `rgba(${particleColor},${Math.min(glow, 0.9)})`;
     ctx.fill();
   }
 }
@@ -108,7 +145,7 @@ function drawLines() {
         ctx.beginPath();
         ctx.moveTo(particles[i].x, particles[i].y);
         ctx.lineTo(particles[j].x, particles[j].y);
-        ctx.strokeStyle = `rgba(126,149,218,${0.18 * (1 - d / 130)})`;
+        ctx.strokeStyle = `rgba(${particleColor},${0.18 * (1 - d / 130)})`;
         ctx.lineWidth = 0.6;
         ctx.stroke();
       }
