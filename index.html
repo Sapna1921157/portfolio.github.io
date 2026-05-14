@@ -35,7 +35,7 @@
         <a href="#about">About</a>
         <a href="#education">Education</a>
         <a href="#skills">Skills</a>
-        <a href="./pages/project.html">Projects</a>
+        <a href="#projects">Projects</a>
         <a href="#contact">Contact</a>
 
         <span class="active-nav"></span>
@@ -417,6 +417,112 @@
       </div>
     </section>
 
+    <!-- projects section design -->
+
+    <section class="projects" id="projects">
+      <h2 class="heading">My <span>Projects</span></h2>
+
+      <!-- Filter tabs -->
+      <div class="proj-filter-tabs">
+        <button class="proj-filter-tab active" data-filter="all">All</button>
+        <button class="proj-filter-tab" data-filter="javascript">JavaScript</button>
+        <button class="proj-filter-tab" data-filter="html-css">HTML &amp; CSS</button>
+      </div>
+
+      <!-- Cards grid -->
+      <div class="projects-grid">
+
+        <!-- Card 1: Analog Clock -->
+        <div class="proj-card" data-category="javascript html-css">
+          <div class="proj-img">
+            <iframe src="https://sapna1921157.github.io/Clock.github.io/" title="Analog Clock" scrolling="no" loading="lazy"></iframe>
+            <div class="proj-overlay">
+              <a href="https://sapna1921157.github.io/Clock.github.io/" target="_blank" class="overlay-demo">
+                <i class="bx bx-link-external"></i> Live Demo
+              </a>
+            </div>
+          </div>
+          <div class="proj-body">
+            <div class="proj-tags">
+              <span class="proj-tag">HTML</span>
+              <span class="proj-tag">CSS</span>
+              <span class="proj-tag">JavaScript</span>
+            </div>
+            <h2 class="proj-title">The Analog Clock</h2>
+            <p class="proj-desc">A real-time analog clock with rotating hour, minute, and second hands. Responsive and accessible, with a clean visual design hosted for easy sharing.</p>
+            <div class="proj-links">
+              <a href="https://sapna1921157.github.io/Clock.github.io/" target="_blank" class="link-demo">
+                <i class="bx bx-play"></i> Live Demo
+              </a>
+              <a href="https://github.com/sapna1921157/Clock.github.io" target="_blank" class="link-gh">
+                <i class="bx bxl-github"></i> GitHub
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2: Purple Piano -->
+        <div class="proj-card" data-category="javascript html-css">
+          <div class="proj-img">
+            <iframe src="https://sapna1921157.github.io/Piano.github.io/" title="Purple Piano" scrolling="no" loading="lazy"></iframe>
+            <div class="proj-overlay">
+              <a href="https://sapna1921157.github.io/Piano.github.io/" target="_blank" class="overlay-demo">
+                <i class="bx bx-link-external"></i> Live Demo
+              </a>
+            </div>
+          </div>
+          <div class="proj-body">
+            <div class="proj-tags">
+              <span class="proj-tag">HTML</span>
+              <span class="proj-tag">CSS</span>
+              <span class="proj-tag">JavaScript</span>
+            </div>
+            <h2 class="proj-title">Purple Piano</h2>
+            <p class="proj-desc">An interactive piano keyboard that plays sounds via mouse clicks or keyboard input. Features sound mapping, responsive design, and a vibrant purple aesthetic.</p>
+            <div class="proj-links">
+              <a href="https://sapna1921157.github.io/Piano.github.io/" target="_blank" class="link-demo">
+                <i class="bx bx-play"></i> Live Demo
+              </a>
+              <a href="https://github.com/sapna1921157/Piano.github.io" target="_blank" class="link-gh">
+                <i class="bx bxl-github"></i> GitHub
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 3: Calculator -->
+        <div class="proj-card" data-category="javascript html-css">
+          <div class="proj-img">
+            <iframe src="https://sapna1921157.github.io/Calculator.github.io/" title="Calculator" scrolling="no" loading="lazy"></iframe>
+            <div class="proj-overlay">
+              <a href="https://sapna1921157.github.io/Calculator.github.io/" target="_blank" class="overlay-demo">
+                <i class="bx bx-link-external"></i> Live Demo
+              </a>
+            </div>
+          </div>
+          <div class="proj-body">
+            <div class="proj-tags">
+              <span class="proj-tag">HTML</span>
+              <span class="proj-tag">CSS</span>
+              <span class="proj-tag">JavaScript</span>
+            </div>
+            <h2 class="proj-title">CalcPro</h2>
+            <p class="proj-desc">A web-based calculator with an intuitive UI for basic arithmetic. Implements accurate calculation logic with responsive design and a clean result display.</p>
+            <div class="proj-links">
+              <a href="https://sapna1921157.github.io/Calculator.github.io/" target="_blank" class="link-demo">
+                <i class="bx bx-play"></i> Live Demo
+              </a>
+              <a href="https://github.com/sapna1921157/Calculator.github.io" target="_blank" class="link-gh">
+                <i class="bx bxl-github"></i> GitHub
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <p class="proj-no-results">No projects match this filter yet — check back soon!</p>
+      </div>
+    </section>
+
     <!-- contact section design -->
 
     <section class="contact" id="contact">
@@ -490,7 +596,7 @@
             <textarea id="message" name="message" placeholder="Your Message" required></textarea>
           </div>
 
-          <button type="submit" class="send-btn" onclick="send(); this.form.reset(); return false;">
+          <button type="submit" class="send-btn" onclick="return send(this);">
             Send Message <i class="bx bx-send"></i>
           </button>
 
@@ -514,6 +620,44 @@
 
     <script src="portfolio.js"></script>
 
+    <script>
+      /* ── Projects filter tabs ── */
+      document.querySelectorAll('.proj-filter-tab').forEach(tab => {
+        tab.addEventListener('click', function () {
+          document.querySelectorAll('.proj-filter-tab').forEach(t => t.classList.remove('active'));
+          this.classList.add('active');
+          const filter = this.dataset.filter;
+          let visible = 0;
+          document.querySelectorAll('.proj-card').forEach(card => {
+            const cats = card.dataset.category || '';
+            const match = filter === 'all' || cats.split(' ').includes(filter);
+            card.classList.toggle('hidden', !match);
+            if (match) {
+              visible++;
+              card.style.animation = 'none';
+              card.offsetHeight;
+              card.style.animation = '';
+            }
+          });
+          document.querySelector('.proj-no-results').style.display = visible === 0 ? 'block' : 'none';
+        });
+      });
+
+      /* ── Animate project cards on scroll ── */
+      const projObserver = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.style.animationPlayState = 'running';
+            projObserver.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.1 });
+      document.querySelectorAll('.proj-card').forEach(card => {
+        card.style.animationPlayState = 'paused';
+        projObserver.observe(card);
+      });
+    </script>
+
     <!-- ==================== Contact Form Script ==================== -->
 
     <!-- EmailJS library: sends emails directly from client-side JavaScript
@@ -524,41 +668,71 @@
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
     <script>
-      // Initialize EmailJS with your Public Key
-      // Public Key: identifies your EmailJS account (safe to keep in frontend code)
       emailjs.init("VRD-kUNva5iTY1Lkc");
 
-      // send() is called when the user clicks the Submit button
-      function send() {
+      function send(btn) {
+        var nameEl    = document.getElementById("name");
+        var emailEl   = document.getElementById("email");
+        var numberEl  = document.getElementById("number");
+        var subjectEl = document.getElementById("subject");
+        var messageEl = document.getElementById("message");
 
-        // Read all form field values entered by the user
-        var name    = document.getElementById("name").value;      // Full Name
-        var email   = document.getElementById("email").value;     // Email Address
-        var contact = document.getElementById("number").value;    // Mobile Number
-        var sub     = document.getElementById("subject").value;   // Email Subject
-        var mess    = document.getElementById("message").value;   // Message
+        var name    = nameEl.value.trim();
+        var email   = emailEl.value.trim();
+        var contact = numberEl.value.trim();
+        var sub     = subjectEl.value.trim();
+        var mess    = messageEl.value.trim();
 
-        // Send the email using EmailJS
-        // Arguments:
-        //   1. Service ID  → your connected Gmail service
-        //   2. Template ID → your EmailJS email template
-        //   3. Parameters  → values mapped to template variables {{from_name}}, {{from_email}}, etc.
+        // Clear previous errors
+        document.querySelectorAll(".field-error").forEach(el => el.remove());
+        document.querySelectorAll(".input-group input, .input-group textarea")
+          .forEach(el => el.style.borderColor = "");
+
+        var errors = [];
+
+        function markError(el, msg) {
+          el.style.borderColor = "#e74c3c";
+          var span = document.createElement("span");
+          span.className = "field-error";
+          span.textContent = msg;
+          span.style.cssText = "color:#e74c3c;font-size:1.2rem;display:block;margin-top:0.4rem;";
+          el.parentNode.appendChild(span);
+          errors.push(msg);
+        }
+
+        if (!name)                              markError(nameEl,    "Name is required.");
+        if (!email)                             markError(emailEl,   "Email is required.");
+        else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
+                                                markError(emailEl,   "Enter a valid email address.");
+        if (!contact)                           markError(numberEl,  "Phone number is required.");
+        else if (!/^\d{7,15}$/.test(contact))   markError(numberEl,  "Enter a valid phone number.");
+        if (!sub)                               markError(subjectEl, "Subject is required.");
+        if (!mess)                              markError(messageEl, "Message cannot be empty.");
+
+        if (errors.length > 0) return false;
+
+        btn.disabled = true;
+        btn.textContent = "Sending…";
+
         emailjs.send(
-          "service_2to119q",    // Service ID  (EmailJS → Email Services)
-          "template_dzzrijq",   // Template ID (EmailJS → Email Templates)
-          {
-            from_name:  name,     // maps to {{from_name}}  in the template
-            from_email: email,    // maps to {{from_email}} in the template
-            contact:    contact,  // maps to {{contact}}    in the template
-            subject:    sub,      // maps to {{subject}}    in the template
-            message:    mess,     // maps to {{message}}    in the template
-          }
+          "service_2to119q",
+          "template_dzzrijq",
+          { from_name: name, from_email: email, contact: contact, subject: sub, message: mess }
         ).then(
-          // On success: show a green success popup
-          () => swal("Successful!", "Your message has been sent.", "success"),
-          // On failure: show a red error popup
-          () => swal("Failed!", "Something went wrong. Please try again.", "error")
+          () => {
+            btn.disabled = false;
+            btn.innerHTML = 'Send Message <i class="bx bx-send"></i>';
+            btn.closest("form").reset();
+            swal("Successful!", "Your message has been sent.", "success");
+          },
+          () => {
+            btn.disabled = false;
+            btn.innerHTML = 'Send Message <i class="bx bx-send"></i>';
+            swal("Failed!", "Something went wrong. Please try again.", "error");
+          }
         );
+
+        return false;
       }
     </script>
 
