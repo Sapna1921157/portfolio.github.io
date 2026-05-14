@@ -350,9 +350,8 @@ section {
 .home-sci {
   position: absolute;
   bottom: 4rem;
-  width: 170px;
   display: flex;
-  justify-content: space-between;
+  gap: 1.5rem;
 }
 
 .home-sci a {
@@ -1043,7 +1042,7 @@ span {
 }
 
 .tl-card.open .tl-body {
-  max-height: 18rem;
+  max-height: 40rem;
   opacity: 1;
   margin-top: 1rem;
 }
@@ -1060,7 +1059,7 @@ span {
   transition: max-height 0.5s ease 0.1s, opacity 0.4s ease 0.15s;
 }
 
-.tl-card.open .tl-tags { max-height: 10rem; opacity: 1; }
+.tl-card.open .tl-tags { max-height: 20rem; opacity: 1; }
 
 .tl-tag {
   font-size: 1.2rem;
@@ -2960,20 +2959,19 @@ section:nth-child(odd) .animate.scroll,
 /* 2. Gradient rotating ring around profile image */
 .gradient-ring {
   position: absolute;
-  inset: -8px;
+  inset: -10px;
   border-radius: 50%;
   background: conic-gradient(
     from 0deg,
-    var(--main-color) 0deg,
-    rgba(var(--accent-rgb), 0.9) 120deg,
-    transparent 180deg,
-    var(--main-color) 240deg,
-    transparent 300deg,
-    var(--main-color) 360deg
+    var(--main-color)                   0deg,
+    rgba(var(--main-color-rgb), 0.15)  90deg,
+    var(--main-color)                  180deg,
+    rgba(var(--main-color-rgb), 0.15)  270deg,
+    var(--main-color)                  360deg
   );
-  animation: ringRotate 5s linear infinite;
+  animation: ringRotate 7s linear infinite;
   z-index: 0;
-  filter: blur(1px);
+  filter: blur(2px);
 }
 
 /* Image sits above the ring */
@@ -3144,4 +3142,52 @@ section:nth-child(odd) .animate.scroll,
 
 .stat-box:hover h3 {
   -webkit-text-fill-color: var(--bg-color);
+}
+
+/* ================================================================
+   ABOUT IMAGE — Professional polish
+================================================================ */
+
+/* Clean bordered photo — no glow, no hover fade */
+.about-img img {
+  border: 3px solid rgba(var(--main-color-rgb), 0.55);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+  transition: none;
+}
+
+.about-img::after { display: none; }
+
+/* Float icons — icon only, no container */
+.float-icon {
+  width: auto;
+  height: auto;
+  background: none;
+  border: none;
+  box-shadow: none;
+  font-size: 2.6rem;
+  color: var(--main-color);
+  filter: drop-shadow(0 0 6px rgba(var(--main-color-rgb), 0.6));
+}
+
+.float-icon:hover {
+  background: none;
+  border: none;
+  box-shadow: none;
+  color: var(--main-color);
+  filter: drop-shadow(0 0 12px rgba(var(--main-color-rgb), 0.9));
+  transform: scale(1.3) !important;
+}
+
+/* Light theme */
+[data-theme="light"] .about-img img {
+  box-shadow:
+    0 0 0 6px rgba(var(--main-color-rgb), 0.1),
+    0 0 30px rgba(var(--main-color-rgb), 0.2),
+    0 8px 32px rgba(0, 0, 0, 0.15);
+}
+
+[data-theme="light"] .float-icon {
+  background: none;
+  border: none;
+  box-shadow: none;
 }
