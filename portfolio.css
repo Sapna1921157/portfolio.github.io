@@ -484,7 +484,7 @@ span {
 .education {
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: stretch;
   flex-direction: column;
   min-height: auto;
   padding-bottom: 5rem;
@@ -834,6 +834,7 @@ span {
 /* ---- Timeline container ---- */
 .timeline {
   position: relative;
+  width: 100%;
   max-width: 100rem;
   margin: 0 auto;
   padding: 1rem 0 3rem;

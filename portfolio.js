@@ -187,6 +187,9 @@ window.addEventListener('mousemove', e => {
   // Dot snaps directly to the cursor
   cursorDot.style.left = mouseX + 'px';
   cursorDot.style.top  = mouseY + 'px';
+  // Restore visibility in case it was hidden (e.g. after a modal closes)
+  cursorDot.style.opacity     = '1';
+  cursorOutline.style.opacity = '0.6';
 });
 
 // Animate the outline ring to lag slightly behind for a smooth trailing effect
@@ -314,6 +317,12 @@ if (textarea) {
     charCounter.classList.toggle('limit', len > 450);
     this.classList.toggle('valid',   len >= 10);
     this.classList.toggle('invalid', len > 0 && len < 10);
+  });
+
+  textarea.closest('form').addEventListener('reset', function() {
+    charCounter.textContent = '0 / 500';
+    charCounter.classList.remove('limit');
+    textarea.classList.remove('valid', 'invalid');
   });
 }
 
